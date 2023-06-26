@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {{ form.media }}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        {% if request.user.available_articles == 0 %}
+          <h1>No available articles</h1>
+          <p>You have no available articles to create a new post.</p>
+        {% else %}
+        <h1>Rašyti straisnį</h1>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+          </div>
+          <div class="form-group" style="padding-top:20px">
+            {{ form.content | safe }}
+          </div>
+          <div class="form-group" style="margin-top: 20px;">
+            <label for="{{ form.website.id_for_label }}">Website</label>
+            {{ form.website }}
+          </div>
+          <div class="form-group"style="margin-top: 20px;">
+            <label for="{{ form.website.id_for_label }}">Category</label>
+            {{ form.category }}
+          </div>
+
+    <button type="submit"  class="btn btn-success" style="margin-top: 20px;">Save</button>
+       </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script>
+    CKEDITOR.replace('{{ form.content.id_for_label }}');
+  </script>
+{% endblock %}
