@@ -27,11 +27,15 @@ class PostForm(forms.ModelForm):
 
 
 class ArticleOrderForm(forms.ModelForm):
-    payment = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-
     class Meta:
         model = ArticleOrder
-        fields = ['f_name', 'l_name', 'bank_account_number', 'product', 'payment']
+        fields = ['f_name', 'l_name', 'bank_account_number', 'product',]
+        widgets = {
+            'f_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'l_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'bank_account_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'product': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 
 class UserProfileUpdateForm(UserChangeForm):

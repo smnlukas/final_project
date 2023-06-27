@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views import generic
 from .forms import PostForm, UserProfileUpdateForm, ArticleOrderForm
-from .models import Post, User
+from .models import Post, User, ArticleOrder
 
 def index(request):
 
@@ -70,7 +70,7 @@ def profile_update(request):
         form = UserProfileUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('my-profile')
+            return redirect('my_profile')
     else:
         form = UserProfileUpdateForm(instance=user)
 
@@ -80,7 +80,7 @@ def profile_update(request):
 
     return render(request, 'mano-paskyra.html', {'form': form, 'profile_data': profile_data})
 
-def create_article_order(request):
+def article_order(request):
     if request.method == 'POST':
         form = ArticleOrderForm(request.POST)
         if form.is_valid():
@@ -88,10 +88,18 @@ def create_article_order(request):
             article_order.user = request.user
             article_order.save()
             return redirect('order_success')
+        else:
+            print(form.errors)  # Print form errors to the console for debugging purposes
     else:
         form = ArticleOrderForm()
 
     return render(request, 'uzsakymas.html', {'form': form})
 
 def order_success(request):
-    return render(request, 'uzsakymas-atliktas.html')
+    last_order = ArticleOrder.objects.order_by('-created_at').first()  # Retrieve the last order
+    if last_order:
+        last_order_price = last_order.product.price
+    else:
+        last_order_price = None
+
+    return render(request, 'uzsakymas-atliktas.html', {'last_order_price': last_order_price})

@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="{% static 'js/global.js' %}"></script>
+<script src="{% static 'js/global.js' %}"></script>
 
 {% block content %}
 <h1>Mano straipsniai</h1>
 {% if post_list %}
 <table class="table align-middle bg-white shadow p-3 mb-5 rounded">
-  <thead>
+    <thead>
     <tr>
-      <th>Title</th>
-      <th>Website</th>
-      <th>Category</th>
-      <th>Status</th>
+        <th>Title</th>
+        <th>Website</th>
+        <th>Category</th>
+        <th>Status</th>
     </tr>
-  </thead>
-  {% for post in post_list %}
-  <tbody>
+    </thead>
+    {% for post in post_list %}
+    <tbody>
     <tr>
-      <td>{{post.title}}</td>
-      <td>{{post.website}}</td>
-      <td>{{post.category}}</td>
-      {% if post.status == 1 %}
-      <td><span class="badge bg-success">Paskelbtas</span></td>
-      {% else %}
-      <td><span class="badge bg-warning">Laukiama</span></td>
-      {% endif %}
+        <td>{{post.title}}</td>
+        <td>{{post.website}}</td>
+        <td>{{post.category}}</td>
+        {% if post.status == 1 %}
+        <td><span class="badge bg-success">Paskelbtas</span></td>
+        {% else %}
+        <td><span class="badge bg-warning">Laukiama</span></td>
+        {% endif %}
     </tr>
-  </tbody>
-  {% endfor %}
+    </tbody>
+    {% endfor %}
 </table>
-  {% else %}
-    <p>Nesate patalpinę jokių straipsnių</p>
+{% else %}
+<p>Nesate patalpinę jokių straipsnių</p>
 {% endif %}
 {% endblock %}

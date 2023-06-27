@@ -3,6 +3,8 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models import Max
+
 
 def bank_account_validator(value):
     if not value.startswith("LT"):
@@ -40,7 +42,7 @@ class ArticleOrder(models.Model):
     order_number = models.CharField(max_length=20, unique=True)
     f_name = models.CharField(max_length=20)
     l_name = models.CharField(max_length=20)
-    bank_account_number = models.CharField(max_length=34, validators=[bank_account_validator])
+    bank_account_number = models.CharField(max_length=34, null=False)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='product')
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -48,7 +50,7 @@ class ArticleOrder(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.order_number:  # Only generate order number if it's not set
-            max_order_number = ArticleOrder.objects.aggregate(max_order_number=max('order_number'))['max_order_number']
+            max_order_number = ArticleOrder.objects.aggregate(max_order_number=Max('order_number'))['max_order_number']
             if max_order_number:
                 current_order_number = int(max_order_number)
                 self.order_number = str(current_order_number + 1).zfill(5)  # Increment and format order number
