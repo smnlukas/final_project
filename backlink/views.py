@@ -1,6 +1,5 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.forms import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
@@ -54,7 +53,7 @@ def create_post(request):
                 post.save()
                 request.user.available_articles -= 1
                 request.user.save()
-                return redirect('index')
+                return redirect('my_articles')
             else:
                 messages.error(request, 'You have no available articles.')
     else:
@@ -80,6 +79,7 @@ def profile_update(request):
 
     return render(request, 'mano-paskyra.html', {'form': form, 'profile_data': profile_data})
 
+@login_required
 def article_order(request):
     if request.method == 'POST':
         form = ArticleOrderForm(request.POST)
@@ -95,6 +95,7 @@ def article_order(request):
 
     return render(request, 'uzsakymas.html', {'form': form})
 
+@login_required
 def order_success(request):
     last_order = ArticleOrder.objects.order_by('-created_at').first()  # Retrieve the last order
     if last_order:
@@ -103,3 +104,15 @@ def order_success(request):
         last_order_price = None
 
     return render(request, 'uzsakymas-atliktas.html', {'last_order_price': last_order_price})
+
+
+class OrdersListView(generic.ListView):
+    template_name = 'mano-uzsakymai.html'
+
+    def get_queryset(self):
+        return ArticleOrder.objects.filter(user=self.request.user).order_by('-created_at')
+
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'straipsnis.html'
+    pk_url_kwarg = 'pk'

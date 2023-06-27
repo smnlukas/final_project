@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'language.DefaultLanguageMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,4 +151,5 @@ CKEDITOR_CONFIGS = {
         'toolbarCanCollapse': False,
     },
 }
+LANGUAGE_CODE = 'lt-latn'
 AUTH_USER_MODEL = 'backlink.User'

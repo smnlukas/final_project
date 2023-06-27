@@ -14,18 +14,18 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="{{ form.title.id_for_label }}">Title</label>
+                    <label for="{{ form.title.id_for_label }}">Antraštė</label>
                     {{ form.title }}
                 </div>
                 <div class="form-group" style="padding-top:20px">
                     {{ form.content | safe }}
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <label for="{{ form.website.id_for_label }}">Website</label>
+                    <label for="{{ form.website.id_for_label }}">Svetainė</label>
                     {{ form.website }}
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <label for="{{ form.website.id_for_label }}">Category</label>
+                    <label for="{{ form.website.id_for_label }}">Kategorija</label>
                     {{ form.category }}
                 </div>
 

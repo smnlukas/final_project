@@ -4,7 +4,7 @@
 <h1> Mano paskyra</h1>
 <p><strong>Turimi straipsniai:</strong> {{ profile_data.available_articles }}</p>
 <div style="margin-top:-15px">
-    <a href="{% url 'password_reset' %}">Pildyti straipsnius</a>
+    <a href="{% url 'article_order' %}">Pildyti straipsnius</a>
     <hr>
 </div>
 <div class="form-content">
@@ -21,8 +21,8 @@
                     {{ form.email }}
                 </div>
                 <div class="form-group">
-                    <a href="{% url 'password_reset' %}">Keisti slaptažodį</a>
-                    <hr>
+                    <label class="small mb-1">Telefono numeris:</label>
+                    {{ form.phone }}
                 </div>
                 <label class="small mb-1">Apie mane:</label> {{ form.bio }}
             </div>

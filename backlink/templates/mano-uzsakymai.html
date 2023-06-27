@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/global.js' %}"></script>
+
+{% block content %}
+<h1>Mano užsakymai</h1>
+{% if articleorder_list %}
+<table class="table align-middle bg-white shadow p-3 mb-5 rounded">
+    <thead>
+    <tr>
+        <th>Straipsnių kiekis</th>
+        <th>Atliktas</th>
+        <th>Statusas</th>
+    </tr>
+    </thead>
+    {% for order in articleorder_list %}
+    <tbody>
+    <tr>
+        <td>{{order.product}}</td>
+        <td>{{order.created_at}}</td>
+        {% if post.status == 1 %}
+        <td><span class="badge bg-success">Apmokėtas</span></td>
+        {% elif post.status == 0 %}
+        <td><span class="badge bg-warning">Laukiama</span></td>
+        {% else %}
+        <td><span class="badge bg-warning">Neapmokėtas</span></td>
+        {% endif %}
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% else %}
+<p>Nesate patalpinę jokių straipsnių</p>
+{% endif %}
+{% endblock %}

@@ -45,11 +45,12 @@ class UserProfileUpdateForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'bio']
+        fields = ['username', 'email', 'bio', 'phone']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.TextInput(attrs={'class': 'form-control'}),
             'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 

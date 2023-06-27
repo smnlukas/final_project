@@ -4,9 +4,8 @@ from .models import Post,Category,Website,ArticleOrder,Product, User
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'status','created_on')
-    list_filter = ("status",)
-    search_fields = ['title', 'content']
-    prepopulated_fields = {'slug': ('title',)}
+    list_filter = ('author',)
+    search_fields = ('author__username',)
 
 class ArticleOrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'product', 'user','payment')

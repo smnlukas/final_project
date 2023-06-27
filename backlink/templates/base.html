@@ -37,12 +37,16 @@
                     class="nav_logo-name">Mano straipsniai</span> </a>
                 <div class="nav_list">
                     <a href="{% url 'create_post'%}" class="nav_link active">
-                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <i class='bx bx-font-family nav_icon'></i>
                         <span class="nav_name">Rašyti</span>
                     </a>
                     <a href="{% url 'article_order'%}" class="nav_link">
-                        <i class='bx bx-user nav_icon'></i>
+                        <i class='bx bx-credit-card nav_icon'></i>
                         <span class="nav_name">Užsakymas</span>
+                    </a>
+                    <a href="{% url 'my_orders'%}" class="nav_link">
+                        <i class='bx bx-list-ul nav_icon'></i>
+                        <span class="nav_name">Mano užsakymai</span>
                     </a>
                     <a href="{% url 'my_profile'%}" class="nav_link">
                         <i class='bx bx-user nav_icon'></i>
@@ -52,13 +56,12 @@
             </div>
             <a href="{% url 'logout'%}" class="nav_link">
                 <i class='bx bx-log-out nav_icon'></i>
-                <span class="nav_name">SignOut</span>
+                <span class="nav_name">Atsijungti</span>
             </a>
             {% endif %}
         </nav>
     </div>
 </header>
-<!--Container Main start-->
 <div class="height-100 bg-light">
     {% block content %}
     {% endblock %}

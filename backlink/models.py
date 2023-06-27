@@ -17,12 +17,19 @@ class User(AbstractUser):
     available_articles = models.IntegerField(default=0)
     bio = models.TextField()
     groups = models.ManyToManyField(Group, verbose_name='groups', blank=True, related_name='custom_user_groups')
+    phone = models.CharField(max_length=12, default='+37063018761')
     user_permissions = models.ManyToManyField(Permission, verbose_name='user permissions', blank=True, related_name='custom_user_permissions')
 
     def update_available_articles(self):
-        total_articles = self.articleorder_set.aggregate(total_articles=models.Sum('product__articles_number'))['total_articles']
+        total_articles = \
+        self.articleorder_set.filter(payment=1).aggregate(total_articles=models.Sum('product__articles_number'))[
+            'total_articles']
         self.available_articles = total_articles or 0
         self.save()
+
+    class Meta:
+        verbose_name = "Vartotojas"
+        verbose_name_plural = 'Vartotojai'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -31,6 +38,13 @@ class Product(models.Model):
     name = models.CharField(max_length=20, unique=True)
     price= models.FloatField()
     articles_number = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.name} - {self.price}'
+
+    class Meta:
+        verbose_name = "Produktas"
+        verbose_name_plural = 'Produktai'
 
 PAYMENT = (
     (0,"Waiting"),
@@ -47,6 +61,10 @@ class ArticleOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.IntegerField(choices=PAYMENT, default=0)
+
+    class Meta:
+        verbose_name = "Straipsnių užsakyai"
+        verbose_name_plural = 'Straipsnių užsakymai'
 
     def save(self, *args, **kwargs):
         if not self.order_number:  # Only generate order number if it's not set
@@ -65,6 +83,10 @@ class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=50, unique=True)
 
+    class Meta:
+        verbose_name = "Kategorija"
+        verbose_name_plural = 'Kategorijos'
+
     def __str__(self):
         return self.category_name
 
@@ -72,6 +94,10 @@ class Website(models.Model):
     website_id = models.AutoField(primary_key=True)
     website_url = models.CharField(max_length=50, unique=True)
     category = models.ManyToManyField(Category)
+
+    class Meta:
+        verbose_name = "Svetainė"
+        verbose_name_plural = 'Svetainės'
 
     def __str__(self):
         return self.website_url
@@ -82,6 +108,7 @@ STATUS = (
 )
 
 class Post(models.Model):
+    post_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     author = models.ForeignKey('backlink.User', on_delete=models.CASCADE, related_name='blog_posts')
     updated_on = models.DateTimeField(auto_now= True)
@@ -92,8 +119,9 @@ class Post(models.Model):
     category= models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     status = models.IntegerField(choices=STATUS, default=0)
 
-
     class Meta:
+        verbose_name = "Straipsnis"
+        verbose_name_plural = 'Straipsniai'
         ordering = ['-created_on']
 
     def save(self, *args, **kwargs):
