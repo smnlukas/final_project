@@ -2,6 +2,14 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
+from django.core.exceptions import ValidationError
+
+def bank_account_validator(value):
+    if not value.startswith("LT"):
+        raise ValidationError("Banko sąskaitos numeris turi prasidėti 'LT'")
+
+    def __str__(self):
+        return f"{self.order_number} - {self.product.name} - {self.product.price}"
 
 class User(AbstractUser):
     available_articles = models.IntegerField(default=0)
@@ -16,6 +24,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
 class Product(models.Model):
     name = models.CharField(max_length=20, unique=True)
     price= models.FloatField()
@@ -29,17 +38,26 @@ PAYMENT = (
 
 class ArticleOrder(models.Model):
     order_number = models.CharField(max_length=20, unique=True)
+    f_name = models.CharField(max_length=20)
+    l_name = models.CharField(max_length=20)
+    bank_account_number = models.CharField(max_length=34, validators=[bank_account_validator])
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='product')
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.IntegerField(choices=PAYMENT, default=0)
 
     def save(self, *args, **kwargs):
+        if not self.order_number:  # Only generate order number if it's not set
+            max_order_number = ArticleOrder.objects.aggregate(max_order_number=max('order_number'))['max_order_number']
+            if max_order_number:
+                current_order_number = int(max_order_number)
+                self.order_number = str(current_order_number + 1).zfill(5)  # Increment and format order number
+            else:
+                self.order_number = '00001'  # Initial order number
+
         super().save(*args, **kwargs)
         self.user.update_available_articles()
 
-    def __str__(self):
-        return f"{self.order_number} - {self.product.name} - {self.product.price}"
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
@@ -89,4 +107,5 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
 

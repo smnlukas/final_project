@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Profilio puslapis{% endblock title %}
+{% block title %}Užsakymo puslapis{% endblock title %}
 {% block content %}
-    <h1> Mano paskyra</h1>
+    <h1>Užsakymas</h1>
     <p><strong>Turimi straipsniai:</strong> {{ profile_data.available_articles }}</p>
     <div style="margin-top:-15px">
         <a href="{% url 'password_reset' %}">Pildyti straipsnius</a>
